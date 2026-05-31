@@ -184,3 +184,26 @@ def get_funnel(
         "exit_count": exits,
         "conversion_rate": conversion_rate
     }
+@router.get("/anomalies")
+def get_anomalies(
+    db: Session = Depends(get_db)
+):
+
+    suspicious_events = db.query(EventTable).filter(
+        EventTable.dwell_ms > 300000
+    ).all()
+
+    anomalies = []
+
+    for e in suspicious_events:
+        anomalies.append({
+            "visitor_id": e.visitor_id,
+            "store_id": e.store_id,
+            "dwell_ms": e.dwell_ms,
+            "reason": "Excessive dwell time"
+        })
+
+    return {
+        "anomaly_count": len(anomalies),
+        "anomalies": anomalies
+    }

@@ -148,3 +148,39 @@ def get_store_metrics(
         "exits": exits,
         "average_dwell_ms": avg_dwell or 0
     }
+@router.get("/funnel")
+def get_funnel(
+    db: Session = Depends(get_db)
+):
+
+    entries = db.query(EventTable).filter(
+        EventTable.event_type == "ENTRY"
+    ).count()
+
+    zone_entries = db.query(EventTable).filter(
+        EventTable.event_type == "ZONE_ENTER"
+    ).count()
+
+    purchases = db.query(EventTable).filter(
+        EventTable.event_type == "PURCHASE"
+    ).count()
+
+    exits = db.query(EventTable).filter(
+        EventTable.event_type == "EXIT"
+    ).count()
+
+    conversion_rate = 0
+
+    if entries > 0:
+        conversion_rate = round(
+            (purchases / entries) * 100,
+            2
+        )
+
+    return {
+        "entry_count": entries,
+        "zone_enter_count": zone_entries,
+        "purchase_count": purchases,
+        "exit_count": exits,
+        "conversion_rate": conversion_rate
+    }

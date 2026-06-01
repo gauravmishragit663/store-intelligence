@@ -207,3 +207,26 @@ def get_anomalies(
         "anomaly_count": len(anomalies),
         "anomalies": anomalies
     }
+@router.get("/heatmap")
+def get_heatmap(
+    db: Session = Depends(get_db)
+):
+
+    zone_stats = (
+        db.query(
+            EventTable.zone_id,
+            func.count(EventTable.zone_id)
+        )
+        .filter(EventTable.zone_id != None)
+        .group_by(EventTable.zone_id)
+        .all()
+    )
+
+    heatmap = {}
+
+    for zone, count in zone_stats:
+        heatmap[zone] = count
+
+    return {
+        "zones": heatmap
+    }

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import sqlite3
 from app.dashboard_api import get_dashboard_summary
+from app.top_zone_api import get_top_zone
 
 app = FastAPI(
     title="Store Intelligence API",
@@ -55,3 +56,7 @@ def health_check():
     return {
         "status": "healthy"
     }
+@app.get("/top-zone")
+def top_zone():
+
+    return get_top_zone()

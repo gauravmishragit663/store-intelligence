@@ -8,3 +8,5 @@ data/
 *.mp4
 *.avi
 *.mov
+
+store_intelligence.db

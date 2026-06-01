@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import sqlite3
+from app.dashboard_api import get_dashboard_summary
 
 app = FastAPI(
     title="Store Intelligence API",
@@ -40,6 +41,12 @@ def get_visitors():
         "total_records": len(rows),
         "data": rows
     }
+
+
+@app.get("/dashboard-summary")
+def dashboard_summary():
+
+    return get_dashboard_summary()
 
 
 @app.get("/health")

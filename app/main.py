@@ -1,22 +1,50 @@
 from fastapi import FastAPI
-from app.ingestion import router as ingestion_router
+import sqlite3
 
 app = FastAPI(
     title="Store Intelligence API",
-    description="Purplle Tech Challenge 2026",
-    version="1.0.0"
+    description="Retail Analytics API",
+    version="1.0"
 )
 
-app.include_router(ingestion_router)
+DB_NAME = "store_intelligence.db"
 
 
 @app.get("/")
-def root():
-    return {"message": "Store Intelligence API Running"}
+def home():
+
+    return {
+        "message": "Store Intelligence API Running"
+    }
+
+
+@app.get("/visitors")
+def get_visitors():
+
+    conn = sqlite3.connect(DB_NAME)
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM visitor_analytics
+        """
+    )
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return {
+        "total_records": len(rows),
+        "data": rows
+    }
 
 
 @app.get("/health")
-def health():
+def health_check():
+
     return {
         "status": "healthy"
     }

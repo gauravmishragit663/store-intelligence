@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import supervision as sv
 import cv2
-
+from database_storage import insert_visitor
 # Load YOLO
 model = YOLO("yolov8n.pt")
 
@@ -158,6 +158,24 @@ for track_id in visitor_start_frame:
         qualified_visitors.add(track_id)
 
 total_visitors = len(qualified_visitors)
+
+# Save qualified visitors to database
+
+for track_id in qualified_visitors:
+
+    dwell_seconds = (
+        visitor_last_frame[track_id]
+        -
+        visitor_start_frame[track_id]
+    ) / fps
+
+    insert_visitor(
+        int(track_id),
+        ZONE_NAME,
+        round(dwell_seconds, 2),
+        "CAM1"
+    )
+    print("Analytics saved successfully.")
 
 print(
     f"Total Visitors: {total_visitors}"

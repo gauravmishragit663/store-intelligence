@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Store Intelligence Dashboard</title>
+</head>
+<body>
+
+    <h1>Store Intelligence Dashboard</h1>
+
+    <h2>Store KPIs</h2>
+
+    <div id="kpis">
+        Loading...
+    </div>
+
+    <script>
+
+        async function loadDashboard() {
+
+            const dashboard =
+                await fetch("http://127.0.0.1:8000/dashboard-summary");
+
+            const dashboardData =
+                await dashboard.json();
+
+            const sales =
+                await fetch("http://127.0.0.1:8000/sales-summary");
+
+            const salesData =
+                await sales.json();
+
+            document.getElementById("kpis").innerHTML = `
+                <p>Total Visitors:
+                    ${dashboardData.total_visitors}
+                </p>
+
+                <p>Average Dwell Time:
+                    ${dashboardData.average_dwell_time}
+                </p>
+
+                <p>Most Visited Zone:
+                    ${dashboardData.most_visited_zone}
+                </p>
+
+                <p>Total Sales:
+                    ₹${salesData.total_sales}
+                </p>
+
+                <p>Total Orders:
+                    ${salesData.total_orders}
+                </p>
+
+                <p>Top Brand:
+                    ${salesData.top_brand}
+                </p>
+            `;
+        }
+
+        loadDashboard();
+
+    </script>
+    <script>
+
+async function loadDashboard() {
+
+    try {
+
+        const dashboard =
+            await fetch("http://127.0.0.1:8000/dashboard-summary");
+
+        const dashboardData =
+            await dashboard.json();
+
+        console.log(dashboardData);
+
+        const sales =
+            await fetch("http://127.0.0.1:8000/sales-summary");
+
+        const salesData =
+            await sales.json();
+
+        console.log(salesData);
+
+        document.getElementById("kpis").innerHTML = `
+            <p>Total Visitors: ${dashboardData.total_visitors}</p>
+            <p>Average Dwell Time: ${dashboardData.average_dwell_time}</p>
+            <p>Most Visited Zone: ${dashboardData.most_visited_zone}</p>
+            <p>Total Sales: ₹${salesData.total_sales}</p>
+            <p>Total Orders: ${salesData.total_orders}</p>
+            <p>Top Brand: ${salesData.top_brand}</p>
+        `;
+
+    } catch(error) {
+
+        document.getElementById("kpis").innerHTML =
+            "ERROR: " + error;
+
+        console.log(error);
+    }
+}
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>

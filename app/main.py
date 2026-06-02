@@ -3,11 +3,20 @@ import sqlite3
 from app.dashboard_api import get_dashboard_summary
 from app.top_zone_api import get_top_zone
 from app.sales_api import router as sales_router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="Store Intelligence API",
     description="Retail Analytics API",
     version="1.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(sales_router)

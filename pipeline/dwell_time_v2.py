@@ -1,6 +1,7 @@
 from ultralytics import YOLO
 import supervision as sv
 import cv2
+from database_storage import insert_visitor
 
 # =========================
 # STORE ROI
@@ -119,9 +120,11 @@ while True:
 cap.release()
 cv2.destroyAllWindows()
 
-print("\n===== VISITOR DWELL TIMES =====\n")
+print("\n===== ENTRY CAMERA ANALYTICS =====\n")
 
 MIN_DWELL_SECONDS = 3
+
+qualified_visitors = 0
 
 for track_id in visitor_start_frame:
 
@@ -135,7 +138,20 @@ for track_id in visitor_start_frame:
     if dwell_seconds < MIN_DWELL_SECONDS:
         continue
 
+    qualified_visitors += 1
+
     print(
         f"Visitor {track_id} stayed "
         f"{dwell_seconds:.2f} seconds"
     )
+
+    insert_visitor(
+        int(track_id),
+        "ENTRY",
+        round(dwell_seconds, 2),
+        "CAM3"
+    )
+
+print()
+print(f"Total Qualified Visitors: {qualified_visitors}")
+print("Analytics saved successfully.")

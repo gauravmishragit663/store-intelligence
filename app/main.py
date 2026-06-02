@@ -2,12 +2,15 @@ from fastapi import FastAPI
 import sqlite3
 from app.dashboard_api import get_dashboard_summary
 from app.top_zone_api import get_top_zone
+from app.sales_api import router as sales_router
 
 app = FastAPI(
     title="Store Intelligence API",
     description="Retail Analytics API",
     version="1.0"
 )
+
+app.include_router(sales_router)
 
 DB_NAME = "store_intelligence.db"
 

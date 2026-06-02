@@ -4,6 +4,7 @@ from app.dashboard_api import get_dashboard_summary
 from app.top_zone_api import get_top_zone
 from app.sales_api import router as sales_router
 from fastapi.middleware.cors import CORSMiddleware
+from app.ingestion import router as ingestion_router
 
 app = FastAPI(
     title="Store Intelligence API",
@@ -20,6 +21,7 @@ app.add_middleware(
 )
 
 app.include_router(sales_router)
+app.include_router(ingestion_router)
 
 DB_NAME = "store_intelligence.db"
 

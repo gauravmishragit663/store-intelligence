@@ -1,3 +1,13 @@
+# PROMPT:
+# Generate FastAPI tests for event ingestion,
+# duplicate event handling, metrics calculation,
+# funnel analytics, anomaly detection, and heatmap endpoints.
+
+# CHANGES MADE:
+# Adjusted payload fields to match project schema.
+# Added duplicate event validation.
+# Modified assertions to match actual API responses.
+
 from fastapi.testclient import TestClient
 from app.main import app
 

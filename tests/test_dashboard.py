@@ -1,3 +1,12 @@
+# PROMPT:
+# Generate FastAPI tests for dashboard summary endpoint.
+# Verify status code and key dashboard metrics.
+
+# CHANGES MADE:
+# Updated assertions to match dashboard API response.
+# Added validation for total visitors, average dwell time,
+# and most visited zone.
+
 from fastapi.testclient import TestClient
 from app.main import app
 

@@ -1,3 +1,12 @@
+# PROMPT:
+# Generate FastAPI tests for sales analytics endpoint.
+# Validate sales summary fields and response structure.
+
+# CHANGES MADE:
+# Modified assertions to match project sales API.
+# Added checks for total orders, total sales,
+# and top brand metrics.
+
 from fastapi.testclient import TestClient
 from app.main import app
 

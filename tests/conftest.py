@@ -1,3 +1,10 @@
+# PROMPT:
+# Generate pytest fixtures for FastAPI testing.
+
+# CHANGES MADE:
+# Modified fixtures to support project-specific endpoints
+# and test data requirements.
+
 import sys
 import os
 

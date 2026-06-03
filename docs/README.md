@@ -1,6 +1,4 @@
-README.md is the most important document. Reviewers usually read this first.
 
-Create `README.md` and paste this structure.
 
 # Store Intelligence System
 

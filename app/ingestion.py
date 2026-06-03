@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.models import Event
 from app.models_db import EventTable
 from app.database import get_db
+from app.logger_config import logger
 
 router = APIRouter()
 
@@ -33,13 +34,26 @@ def ingest_event(
         db.add(db_event)
         db.commit()
 
+        logger.info(
+            f"store_id={event.store_id} "
+            f"event_count=1 "
+            f"event_type={event.event_type} "
+            f"visitor_id={event.visitor_id}"
+        )
+
         return {
             "message": "Event stored successfully",
             "event_id": event.event_id
         }
 
     except IntegrityError:
+
         db.rollback()
+
+        logger.info(
+            f"duplicate_event={event.event_id} "
+            f"store_id={event.store_id}"
+        )
 
         return {
             "message": "Duplicate event ignored",
@@ -72,6 +86,8 @@ def get_events(
             for e in events
         ]
     }
+
+
 @router.get("/metrics")
 def get_metrics(
     db: Session = Depends(get_db)
@@ -107,6 +123,7 @@ def get_metrics(
         "staff_events": staff_events,
         "average_dwell_ms": avg_dwell or 0
     }
+
 
 @router.get("/stores/{store_id}/metrics")
 def get_store_metrics(
@@ -148,6 +165,8 @@ def get_store_metrics(
         "exits": exits,
         "average_dwell_ms": avg_dwell or 0
     }
+
+
 @router.get("/funnel")
 def get_funnel(
     db: Session = Depends(get_db)
@@ -184,6 +203,8 @@ def get_funnel(
         "exit_count": exits,
         "conversion_rate": conversion_rate
     }
+
+
 @router.get("/anomalies")
 def get_anomalies(
     db: Session = Depends(get_db)
@@ -207,6 +228,8 @@ def get_anomalies(
         "anomaly_count": len(anomalies),
         "anomalies": anomalies
     }
+
+
 @router.get("/heatmap")
 def get_heatmap(
     db: Session = Depends(get_db)

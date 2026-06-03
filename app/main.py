@@ -5,12 +5,39 @@ from app.top_zone_api import get_top_zone
 from app.sales_api import router as sales_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.ingestion import router as ingestion_router
+from app.logger_config import logger
+import time
+import uuid
+from fastapi import Request
 
 app = FastAPI(
     title="Store Intelligence API",
     description="Retail Analytics API",
     version="1.0"
 )
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+
+    trace_id = str(uuid.uuid4())
+
+    start_time = time.time()
+
+    response = await call_next(request)
+
+    latency = round(
+        (time.time() - start_time) * 1000,
+        2
+    )
+
+    logger.info(
+        f"trace_id={trace_id} "
+        f"endpoint={request.url.path} "
+        f"status_code={response.status_code} "
+        f"latency_ms={latency}"
+    )
+
+    return response
 
 app.add_middleware(
     CORSMiddleware,
@@ -74,3 +101,6 @@ def health_check():
 def top_zone():
 
     return get_top_zone()
+
+
+    

@@ -5,7 +5,6 @@
     <title>Store Intelligence Dashboard</title>
 
     <style>
-
         body{
             font-family: Arial, sans-serif;
             background:#f4f6f9;
@@ -43,6 +42,10 @@
             color:#111;
         }
 
+        .error{
+            color:red;
+            font-weight:bold;
+        }
     </style>
 
 </head>
@@ -52,60 +55,70 @@
 <h1>Store Intelligence Dashboard</h1>
 
 <div id="kpis" class="container">
-
     Loading...
-
 </div>
 
 <script>
 
-async function loadDashboard(){
+async function loadDashboard() {
 
-    const dashboard =
-        await fetch("http://127.0.0.1:8000/dashboard-summary");
+    try {
 
-    const dashboardData =
-        await dashboard.json();
+        const dashboardResponse =
+            await fetch("/dashboard-summary");
 
-    const sales =
-        await fetch("http://127.0.0.1:8000/sales-summary");
+        const dashboardData =
+            await dashboardResponse.json();
 
-    const salesData =
-        await sales.json();
+        const salesResponse =
+            await fetch("/sales-summary");
 
-    document.getElementById("kpis").innerHTML = `
+        const salesData =
+            await salesResponse.json();
 
-        <div class="card">
-            <h3>Total Visitors</h3>
-            <p>${dashboardData.total_visitors}</p>
-        </div>
+        document.getElementById("kpis").innerHTML = `
 
-        <div class="card">
-            <h3>Average Dwell Time</h3>
-            <p>${dashboardData.average_dwell_time}</p>
-        </div>
+            <div class="card">
+                <h3>Total Visitors</h3>
+                <p>${dashboardData.total_visitors}</p>
+            </div>
 
-        <div class="card">
-            <h3>Most Visited Zone</h3>
-            <p>${dashboardData.most_visited_zone}</p>
-        </div>
+            <div class="card">
+                <h3>Average Dwell Time</h3>
+                <p>${dashboardData.average_dwell_time}</p>
+            </div>
 
-        <div class="card">
-            <h3>Total Sales</h3>
-            <p>&#8377;${salesData.total_sales}</p>
-        </div>
+            <div class="card">
+                <h3>Most Visited Zone</h3>
+                <p>${dashboardData.most_visited_zone}</p>
+            </div>
 
-        <div class="card">
-            <h3>Total Orders</h3>
-            <p>${salesData.total_orders}</p>
-        </div>
+            <div class="card">
+                <h3>Total Sales</h3>
+                <p>₹${salesData.total_sales}</p>
+            </div>
 
-        <div class="card">
-            <h3>Top Brand</h3>
-            <p>${salesData.top_brand}</p>
-        </div>
+            <div class="card">
+                <h3>Total Orders</h3>
+                <p>${salesData.total_orders}</p>
+            </div>
 
-    `;
+            <div class="card">
+                <h3>Top Brand</h3>
+                <p>${salesData.top_brand}</p>
+            </div>
+
+        `;
+
+    } catch(error) {
+
+        document.getElementById("kpis").innerHTML =
+            `<div class="error">
+                Dashboard Error: ${error}
+             </div>`;
+
+        console.log(error);
+    }
 }
 
 loadDashboard();

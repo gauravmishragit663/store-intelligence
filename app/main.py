@@ -9,6 +9,7 @@ from app.logger_config import logger
 import time
 import uuid
 from fastapi import Request
+from fastapi.responses import FileResponse
 
 app = FastAPI(
     title="Store Intelligence API",
@@ -101,6 +102,12 @@ def health_check():
 def top_zone():
 
     return get_top_zone()
+@app.get("/dashboard")
+def dashboard():
+
+    return FileResponse(
+        "dashboard/index.html"
+    )
 
 
     
